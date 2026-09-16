@@ -1,4 +1,4 @@
-name: Frontend CI
+name: CI
 
 on:
   push:
@@ -11,7 +11,7 @@ on:
       - main
 
 jobs:
-  build:
+  frontend:
     runs-on: ubuntu-latest
 
     defaults:
@@ -37,3 +37,28 @@ jobs:
 
       - name: Build
         run: npm run build
+
+  backend:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Django Check
+        run: python manage.py check
+
+      - name: Run Tests
+        run: python manage.py test
